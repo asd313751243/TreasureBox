@@ -1,0 +1,17 @@
+﻿@page "/"
+@using Tarea6_7.Data
+@inject UsuarioServices service
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+<br />
+@if (service.estado)
+{
+    <b>Hola, @service._usuario.Nombre</b>
+}
+else
+{
+    <b>No estas autorizado</b>
+}
+

@@ -1,0 +1,110 @@
+﻿@page "/tesoros"
+@inject UsuarioServices service
+
+
+@if (service.estado)
+{
+    <div class="container">
+        <div class="row-5">
+            <div class="col-10 bg-light m-2 justify-content-start">
+                <div class="customcolor">
+                    <div class="p-3 mb-3 text-white text-center">Agregar Tesoro</div>
+                </div>
+                <form @onsubmit="Add_Treasure">
+                    <div class=" form-group">
+                        <b>Nombre</b>
+                        <input type="text" class="form-control" required @bind="service._tesoro.Nombre" />
+                    </div>
+                    <div class=" form-group">
+                        <b>Valor</b>
+                        <input type="number" step="0.01" class="form-control" required @bind="service._tesoro.Valor" />
+                    </div>
+                    <div class=" form-group">
+                        <b>Peso</b>
+                        <input type="number" step="0.01" class="form-control" required @bind="service._tesoro.Peso" />
+                    </div>
+                    <div class=" form-group">
+                        <b>Descripcion</b>
+                        <textarea class="form-control" required @bind="service._tesoro.Descripcion"></textarea>
+                    </div>
+                    <div class=" form-group">
+                        <b>Fecha</b>
+                        <input type="date" class="form-control" required @bind="service._tesoro.Fecha" />
+                    </div>
+                    <div class=" form-group">
+                        <b>Lugar</b>
+                        <input type="text" class="form-control" required @bind="service._tesoro.Lugar" />
+                    </div>
+                    <div class=" form-group">
+                        <b>Latitud</b>
+                        <input type="number" step="0.00000000001" class="form-control" required @bind="service._tesoro.Latitud" />
+                    </div>
+                    <div class=" form-group">
+                        <b>Longitud</b>
+                        <input type="number" step="0.00000000001" class="form-control" required @bind="service._tesoro.Longitud" />
+                    </div>
+                    <div class=" form-group">
+                        <b>Url de Referencia</b>
+                        <input type="url" class="form-control" @bind="service._tesoro.Url" />
+                    </div>
+                    <div class="text-center p-3 mb-3">
+                        <input type="submit" class="btn btn-primary" value="Agregar Tesoro" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .customcolor{
+            background-color: @service._usuario.Color;
+        }
+        .card {
+            float: left;
+            margin: 5px;
+            width: 50px;
+            height: 550px;
+            background-color: @service._usuario.Color;
+            background-image: linear-gradient(315deg, @service._usuario.Color, #380036 74%);
+        }
+    </style>
+
+    @foreach (var s in service.usuario_tesoros)
+    {
+        <div class="card" style="width: 18rem;">
+            <div class="card-body text-white">
+                <h5 class="card-title">@s.Nombre</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Valor</h6>
+                <p class="card-text">@s.Valor</p>
+                <h6 class="card-subtitle mb-2 text-muted">Peso</h6>
+                <p class="card-text">@s.Peso</p>
+                <h6 class="card-subtitle mb-2 text-muted">Descripcion</h6>
+                <p class="card-text">@s.Descripcion</p>
+                <h6 class="card-subtitle mb-2 text-muted">Fecha</h6>
+                <p class="card-text">@s.Fecha</p>
+                <h6 class="card-subtitle mb-2 text-muted">Lugar</h6>
+                <p class="card-text">@s.Lugar</p>
+                <h6 class="card-subtitle mb-2 text-muted">Latitud</h6>
+                <p class="card-text">@s.Latitud</p>
+                <h6 class="card-subtitle mb-2 text-muted">Longitud</h6>
+                <p class="card-text">@s.Longitud</p>
+                <h6 class="card-subtitle mb-2 text-muted">Url</h6>
+                <p class="card-text">@s.Url</p>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <h3>No estas autorizado</h3>
+}
+
+
+@code {
+    private async Task Add_Treasure()
+    {
+        service._usuario._Tesoros.Add(service._tesoro);
+        await service.UpdateUsuarioAsync(service._usuario);
+        service._tesoro = new Tesoro();
+    }
+}

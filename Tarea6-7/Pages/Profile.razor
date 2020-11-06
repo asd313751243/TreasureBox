@@ -1,0 +1,116 @@
+﻿@page "/profile"
+@inject UsuarioServices service
+
+
+<style>
+    .customcolor{
+            background-color: @service._usuario.Color;
+        }
+</style>
+
+@if (service.estado)
+{
+    <div class="container">
+        <div class="col-5 bg-light m-2 justify-content-start">
+            <div class="customcolor">
+                <div class="p-3 mb-3 text-white text-center"><b>Hola, @service._usuario.Correo</b></div>
+            </div>
+            <div class=" form-group">
+                <b>Nombre</b>
+                <input type="text" class="form-control" required @bind="service._usuario.Nombre" disabled="@disabled" />
+            </div>
+
+            @if (button_information == "Guardar")
+            {
+                @if (button_password == "Cambiar Contraseña")
+                {
+                    <div class=" form-group">
+                        <b>Contraseña</b>
+                        <input type="password" class="form-control" required @bind="service._usuario.Clave" disabled />
+                    </div>
+                }
+                else if (button_password == "Guardar Contraseña")
+                {
+                    <div class=" form-group">
+                        <b>Contraseña Actual</b>
+                        <input type="password" class="form-control" @bind="password"  required />
+                    </div>
+                    <div class=" form-group">
+                        <b>Contraseña Nueva</b>
+                        <input type="password" class="form-control" @bind="newpassword" required />
+                    </div>
+                    <div class=" form-group">
+                        <b>Confirmar Contraseña</b>
+                        <input type="password" class="form-control" @bind="check" required />
+                    </div>
+                    <br />
+                    <h6 class="text-danger">@message</h6>
+                }
+                <div class="text-center p-3 mb-3">
+                    <input type="button" class="btn btn-success" @onclick="Edit_password" value="@button_password" />
+                </div>
+
+            }
+            <div class=" form-group">
+                <b>Color</b>
+                <input type="color" class="form-control" required @bind="service._usuario.Color" disabled="@disabled" />
+            </div>
+            <div class="text-center p-3 mb-3">
+                <input type="button" class="btn btn-primary" @onclick="Edit_information" value="@button_information" />
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h3>No estas autorizado</h3>
+}
+
+@code {
+    private bool disabled = true;
+    private string button_information = "Editar";
+    private string button_password = "Cambiar Contraseña";
+    private string password, newpassword, check, message;
+
+    private async Task Edit_information()
+    {
+        if (button_information == "Guardar")
+        {
+            await service.UpdateUsuarioAsync(service._usuario);
+            button_information = "Editar";
+            disabled = true;
+        }
+        else
+        {
+            button_information = "Guardar";
+            disabled = false;
+        }
+    }
+    private void Edit_password()
+    {
+        if(button_password == "Guardar Contraseña")
+        {
+            if(password == service._usuario.Clave)
+            {
+                if(newpassword == check)
+                {
+                    service._usuario.Clave = newpassword;
+                    button_password = "Cambiar Contraseña";
+                    message = "";
+                }
+                else
+                {
+                    message = "Revisar la confirmacion de contraseña";
+                }
+            }
+            else
+            {
+                message = "Contraseña actual incorrecta";
+            }
+        }
+        else
+        {
+            button_password = "Guardar Contraseña";
+        }
+    }
+}

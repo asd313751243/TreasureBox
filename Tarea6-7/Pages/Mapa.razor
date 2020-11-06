@@ -1,0 +1,78 @@
+﻿@page "/mapa"
+@inject UsuarioServices service
+@*@inject IJSRuntime iJSRuntime*@
+@using System.Text.Json
+
+
+<!--<style>
+    #mapid {
+        height: 500px;
+    }
+</style>
+-->
+
+@if (service.estado)
+{
+    <h3>Mapa</h3>
+    <SfMaps>
+        @* To zoom and pan *@
+        <MapsZoomSettings ZoomFactor="8" MaxZoom="9" MinZoom="2" Enable="true"
+                          Toolbars='new string[]{"Zoom", "ZoomIn", "ZoomOut", "Pan", "Reset" }'>
+        </MapsZoomSettings>
+        <MapsCenterPosition Latitude="18.735693" Longitude="-70.162651"></MapsCenterPosition>
+        <MapsLayers>
+            <MapsLayer LayerType="ShapeLayerType.OSM">
+                <MapsMarkerSettings>
+                    <MapsMarker Visible="true" DataSource="_marcadores" Height="25" Width="15">
+                        <MapsMarkerTooltipSettings ValuePath="Tesoro" Visible="true">
+                        </MapsMarkerTooltipSettings>
+                    </MapsMarker>
+                </MapsMarkerSettings>
+            </MapsLayer>
+        </MapsLayers>
+    </SfMaps>
+}
+else
+{
+    <h3>No estas autorizado</h3>
+}
+
+<!--    <button class="btn btn-info" @onclick="map">General Mapa</button>
+    <div id="mapid"></div>
+    -->
+
+@code {
+    public class Marcador
+    {
+        public double Latitude;
+        public double Longitude;
+        public string Tesoro;
+    }
+
+    public List<Marcador> _marcadores = new List<Marcador>();
+
+    protected override void OnInitialized()
+    {
+        foreach (var _tesoro in service.usuario_tesoros)
+        {
+            Marcador tes = new Marcador();
+            tes.Latitude = _tesoro.Latitud;
+            tes.Longitude = _tesoro.Longitud;
+            tes.Tesoro = "Nombre: " + _tesoro.Nombre + "<br>" +
+                "Valor: " + _tesoro.Valor + "<br>" +
+                "Peso: " + _tesoro.Peso + "<br>" +
+                "Descripcion: " + _tesoro.Descripcion + "<br>" +
+                "Fecha: " + _tesoro.Fecha + "<br>" +
+                "Lugar: " + _tesoro.Lugar + "<br>" +
+                "Url: " + _tesoro.Url + "<br>";
+            _marcadores.Add(tes);
+        }
+
+        base.OnInitialized();
+    }
+
+    /*public void map()
+    {
+        iJSRuntime.InvokeVoidAsync("GetMap", json);
+    }*/
+}

@@ -1,0 +1,31 @@
+﻿@inherits LayoutComponentBase
+@using Tarea6_7.Data
+@inject UsuarioServices service
+
+<div class="sidebar">
+    <NavMenu />
+</div>
+
+<div class="main">
+    <div class="top-row px-4">
+        @if (service.estado == true)
+        {
+            <NavLink class="nav-link" href="login">
+                <a>Logout</a>
+            </NavLink>
+        }
+        else if(service.estado == false)
+        {
+            <NavLink class="nav-link" href="register">
+                <a>Register</a>
+            </NavLink>
+            <NavLink class="nav-link" href="login">
+                <a>Login</a>
+            </NavLink>
+        }
+    </div>
+
+    <div class="content px-4">
+        @Body
+    </div>
+</div>

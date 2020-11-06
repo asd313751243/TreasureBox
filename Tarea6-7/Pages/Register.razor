@@ -1,0 +1,55 @@
+﻿@page "/register"
+@inject UsuarioServices service
+@inject NavigationManager nav
+
+<div class="container">
+    <center><h2>Register</h2></center>
+    <form @onsubmit="CreateUser">
+        <div class=" form-group">
+            <label>Nombre</label>
+            <input type="text" class="form-control" required @bind="_user.Nombre" />
+        </div>
+        <div class=" form-group">
+            <label>Color</label>
+            <input type="color" class="form-control" required @bind="_user.Color" />
+        </div>
+        <div class=" form-group">
+            <label>Correo</label>
+            <input type="email" class="form-control" required @bind="_user.Correo" />
+        </div>
+        <div class=" form-group">
+            <label>Contraseña</label>
+            <input type="password" class="form-control" required @bind="_user.Clave" />
+        </div>
+        <div class=" form-group">
+            <label>Confirmar Contraseña</label>
+            <input type="password" class="form-control" required @bind="check" />
+        </div>
+        <div class="text-center p-3 mb-3">
+            <input type="submit" class="btn btn-primary" value="Sign Up" />
+            <br />
+            <h6 class="text-danger">@message</h6>
+        </div>
+    </form>
+</div>
+
+@code {
+    private Usuario _user = new Usuario();
+    private string check, message;
+
+    public async Task CreateUser()
+    {
+        if(_user.Clave == check)
+        {
+            message = await service.AddUsuarioAsync(_user);
+            if(message == "Usuario creado exitosamente")
+            {
+                nav.NavigateTo("/login");
+            }
+        }
+        else
+        {
+            message = "Revisar contraseña";
+        }
+    }
+}

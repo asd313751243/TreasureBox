@@ -1,0 +1,47 @@
+﻿@page "/login"
+@inject NavigationManager nav
+@inject UsuarioServices service
+
+<div class="container">
+    <form @onsubmit="toContent">
+        <center><h2>Log In</h2></center>
+        <div class=" form-group">
+            <label>Correo</label>
+            <input type="email" class="form-control" required @bind="_user.Correo" />
+        </div>
+        <div class=" form-group">
+            <label>Contraseña</label>
+            <input type="password" class="form-control" required @bind="_user.Clave" />
+        </div>
+        <div class="text-center p-3 mb-3">
+            <input type="submit" class="btn btn-primary" value="Log In" />
+            <br />
+            <h6 class="text-danger">@message</h6>
+        </div>
+    </form>
+</div>
+
+@code {
+    private Usuario _user = new Usuario();
+    private string message;
+    private bool state;
+
+    protected override void OnInitialized()
+    {
+        service.Setestado();
+        base.OnInitialized();
+    }
+
+    public void toContent()
+    {
+        state = service.ValidarUsuario(_user);
+        if(state == true)
+        {
+            nav.NavigateTo("/");
+        }
+        else
+        {
+            message = "Datos incorrectos";
+        }
+    }
+}
